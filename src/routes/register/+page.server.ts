@@ -4,11 +4,6 @@ import { fail } from "@sveltejs/kit";
 
 const saltRounds = 10;
 
-const hashPassword = async (password: string): Promise<string> => {
-	const salt = await bcrypt.genSalt(saltRounds);
-	return await bcrypt.hash(password, salt);
-};
-
 export const actions = {
 	signup: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
@@ -17,7 +12,7 @@ export const actions = {
 		const password = formData.get("password") as string;
 		const passwordHash = await hashPassword(password);
 
-		const { data, error } = await supabase.auth.signUp({
+		const { error } = await supabase.auth.signUp({
 			email: email,
 			password: passwordHash,
 			options: {
@@ -31,6 +26,11 @@ export const actions = {
 			return fail(500);
 		}
 
-		return { success: true, data };
+		return { success: true };
 	}
 } satisfies Actions;
+
+const hashPassword = async (password: string): Promise<string> => {
+	const salt = await bcrypt.genSalt(saltRounds);
+	return await bcrypt.hash(password, salt);
+};
