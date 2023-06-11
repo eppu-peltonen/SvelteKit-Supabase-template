@@ -28,8 +28,7 @@ export const actions = {
 		const { error } = await supabase.from("profiles").upsert({
 			id: session?.user.id,
 			full_name: fullName,
-			username: username,
-			updated_at: new Date()
+			username: username
 		});
 
 		if (error) {
