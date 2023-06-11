@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import { page } from "$app/stores";
 	import type { SubmitFunction } from "@sveltejs/kit";
 	import { Loading, FormGroup, Button } from "carbon-components-svelte";
-	import { WatsonHealthEdgeEnhancement_02 } from "carbon-icons-svelte";
 
 	let loading = false;
 	let email: string = "";

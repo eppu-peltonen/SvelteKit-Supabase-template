@@ -28,10 +28,8 @@ export const actions = {
 		});
 
 		if (error) {
-			console.error(error);
 			return fail(500);
 		}
-		console.log(data);
 
 		return { success: true, data };
 	}
