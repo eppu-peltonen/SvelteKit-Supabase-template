@@ -13,19 +13,20 @@
 
 <div>
 	<h1>Sveltekit template</h1>
-	<p>Sveltekit + Supabase + Carbon Design System UI library ready to go.</p>
+	<p>Sveltekit + Supabase + Carbon Design System ready to go.</p>
 </div>
 
 <hr class="divider" />
 
 <div>
 	<h3>Authentication</h3>
-	<p>Supabase Auth magic link authentication</p>
+	<p>Supabase Auth: email confirmed signup with username and password login.</p>
 </div>
 
 <hr class="divider" />
 
 <div>
-	<h3>Carbon Design System</h3>
-	<p>Easy to use components</p>
+	<h3>User Interface</h3>
+	<p>Carbon Components Svelte.</p>
+	<p>Svelte Legos.</p>
 </div>

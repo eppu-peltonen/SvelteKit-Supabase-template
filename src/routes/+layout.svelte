@@ -127,7 +127,7 @@
 <SideNav bind:isOpen={isSideNavOpen}>
 	<SideNavItems>
 		<SideNavLink href="/" text="Home" />
-		<SideNavMenu text="Stack">
+		<SideNavMenu text="Tech">
 			<SideNavMenuItem href="https://kit.svelte.dev/" target="_blank" text="Sveltekit" />
 			<SideNavMenuItem href="https://supabase.com/" target="_blank" text="Supabase" />
 			<SideNavMenuItem
@@ -135,6 +135,7 @@
 				target="_blank"
 				text="Carbon Design System"
 			/>
+			<SideNavMenuItem href="https://sveltelegos.com/" target="_blank" text="Svelte Legos" />
 		</SideNavMenu>
 	</SideNavItems>
 </SideNav>
