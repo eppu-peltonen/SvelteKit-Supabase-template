@@ -4,10 +4,14 @@
 	import { page } from "$app/stores";
 	import { enhance } from "$app/forms";
 	import type { SubmitFunction } from "@sveltejs/kit";
-	import { Loading, FormGroup, TextInput, Button } from "carbon-components-svelte";
+	import { Loading, FormGroup, Button } from "carbon-components-svelte";
+	import { messagesStore } from "svelte-legos";
 
 	export let data;
 	let loading = false;
+
+	let username = "";
+	let password = "";
 
 	$: {
 		const redirectTo = $page.url.searchParams.get("redirect");
@@ -18,11 +22,28 @@
 		}
 	}
 
-	const handleLoading: SubmitFunction = () => {
+	const handleSubmit: SubmitFunction = ({ cancel }) => {
 		loading = true;
-		return async () => {
-			loading = false;
+		return async ({ result, update }) => {
+			switch (result.type) {
+				case "success":
+					loading = false;
+					break;
+				case "failure":
+					loading = false;
+					handleError(result.data);
+					cancel();
+				default:
+					break;
+			}
+			await update();
 		};
+	};
+
+	const handleError = (data: Record<string, any> | undefined) => {
+		if (data !== undefined) {
+			messagesStore(data.message, "error");
+		}
 	};
 </script>
 
@@ -49,12 +70,18 @@
 
 <div class="login-container">
 	<div class="form-container">
-		<form action="?/login" use:enhance={handleLoading} method="POST">
+		<form action="?/login" use:enhance={handleSubmit} method="POST">
 			<FormGroup>
 				<label class="bx--label" for="username">Username</label>
-				<input class="bx--text-input" id="username" name="Username" type="text" value={"asd"} />
-				<label class="bx--label" for="Password">Password</label>
-				<input class="bx--text-input" id="Password" name="Password" type="text" value={"asd"} />
+				<input class="bx--text-input" id="username" name="username" type="text" value={username} />
+				<label class="bx--label" for="password">Password</label>
+				<input
+					class="bx--text-input"
+					id="password"
+					name="password"
+					type="password"
+					value={password}
+				/>
 			</FormGroup>
 			<Button type="submit">Login</Button>
 		</form>
