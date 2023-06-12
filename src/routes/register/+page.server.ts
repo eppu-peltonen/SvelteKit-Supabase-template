@@ -18,7 +18,8 @@ export const actions = {
 			options: {
 				data: {
 					username: username,
-					password: passwordHash
+					password: passwordHash,
+					email: email
 				}
 			}
 		});
