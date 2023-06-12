@@ -25,16 +25,18 @@ export const actions = {
 
 		const session = await getSession();
 
-		const { error } = await supabase.from("profiles").upsert({
-			id: session?.user.id,
-			full_name: fullName,
-			username: username
-		});
+		const { error } = await supabase
+			.from("profiles")
+			.update({
+				full_name: fullName,
+				username: username
+			})
+			.eq("id", session?.user.id);
 
 		if (error) {
+			console.log(error);
 			return fail(500, {
-				fullName,
-				username
+				message: "Failed to update."
 			});
 		}
 

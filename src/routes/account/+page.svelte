@@ -2,6 +2,7 @@
 	import { enhance } from "$app/forms";
 	import { Loading, TextInput, Button, FormGroup } from "carbon-components-svelte";
 	import type { SubmitFunction } from "@sveltejs/kit";
+	import { messagesStore } from "svelte-legos";
 
 	export let data;
 	export let form;
@@ -9,14 +10,38 @@
 	let { session, profile } = data;
 
 	let loading = false;
+	const successMessage = "Updated!";
+
 	let fullName: string = profile?.full_name ?? "";
 	let username: string = profile?.username ?? "";
 
-	const handleLoading: SubmitFunction = () => {
+	const handleSubmit: SubmitFunction = ({ cancel }) => {
 		loading = true;
-		return async () => {
-			loading = false;
+		return async ({ result, update }) => {
+			switch (result.type) {
+				case "success":
+					loading = false;
+					showSuccess();
+					break;
+				case "failure":
+					loading = false;
+					showError(result.data);
+					cancel();
+				default:
+					break;
+			}
+			await update({ reset: false });
 		};
+	};
+
+	const showError = (data: Record<string, any> | undefined) => {
+		if (data !== undefined) {
+			messagesStore(data.message, "error");
+		}
+	};
+
+	const showSuccess = () => {
+		messagesStore(successMessage, "success");
 	};
 </script>
 
@@ -39,7 +64,7 @@
 
 <div class="account-container">
 	<div class="form-container">
-		<form action="?/update" use:enhance={handleLoading} method="POST">
+		<form action="?/update" use:enhance={handleSubmit} method="POST">
 			<FormGroup>
 				<TextInput type="text" readonly labelText="Email" value={session.user.email} />
 				<label class="bx--label" for="fullName">Full Name</label>
