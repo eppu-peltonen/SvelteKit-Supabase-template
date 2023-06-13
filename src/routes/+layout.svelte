@@ -140,10 +140,6 @@
 
 <Content>
 	<Grid>
-		<Row>
-			<Column>
-				<slot />
-			</Column>
-		</Row>
+		<slot />
 	</Grid>
 </Content>
