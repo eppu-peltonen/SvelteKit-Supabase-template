@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidate } from "$app/navigation";
+	import { invalidateAll } from "$app/navigation";
 	import { onMount } from "svelte";
 	import { enhance } from "$app/forms";
 	import type { SubmitFunction } from "@sveltejs/kit";
@@ -36,10 +36,8 @@
 	$: ({ supabase, session } = data);
 
 	onMount(() => {
-		const { data } = supabase.auth.onAuthStateChange((event, _session) => {
-			if (_session?.expires_at !== session?.expires_at) {
-				invalidate("supabase:auth");
-			}
+		const { data } = supabase.auth.onAuthStateChange(() => {
+			invalidateAll();
 		});
 
 		return () => data.subscription.unsubscribe();
