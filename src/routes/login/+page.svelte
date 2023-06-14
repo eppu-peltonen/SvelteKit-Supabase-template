@@ -6,17 +6,17 @@
 	import type { SubmitFunction } from "@sveltejs/kit";
 	import { Loading, FormGroup, Button } from "carbon-components-svelte";
 	import { messagesStore } from "svelte-legos";
+	import type { PageData } from "./$types";
+	import { superForm } from "sveltekit-superforms/client";
 
-	export let data;
+	export let data: PageData;
 	let loading = false;
 
-	let username = "";
-	let password = "";
+	const { form, errors, constraints } = superForm(data.form);
 
 	$: {
 		const redirectTo = $page.url.searchParams.get("redirect");
 
-		// check if user has been set in session store then redirect
 		if (browser && data.session) {
 			goto(redirectTo ?? "/");
 		}
@@ -60,6 +60,10 @@
 	.sign-up {
 		margin-top: 1rem;
 	}
+
+	.invalid {
+		color: red;
+	}
 </style>
 
 {#if loading}
@@ -73,15 +77,27 @@
 		<form action="?/login" use:enhance={handleSubmit} method="POST">
 			<FormGroup>
 				<label class="bx--label" for="username">Username</label>
-				<input class="bx--text-input" id="username" name="username" type="text" value={username} />
+				<input
+					class="bx--text-input"
+					id="username"
+					name="username"
+					type="text"
+					aria-invalid={$errors.username ? "true" : undefined}
+					bind:value={$form.username}
+					{...$constraints.username}
+				/>
+				{#if $errors.username}<span class="invalid">{$errors.username}</span>{/if}
 				<label class="bx--label" for="password">Password</label>
 				<input
 					class="bx--text-input"
 					id="password"
 					name="password"
 					type="password"
-					value={password}
+					aria-invalid={$errors.password ? "true" : undefined}
+					bind:value={$form.password}
+					{...$constraints.password}
 				/>
+				{#if $errors.password}<span class="invalid">{$errors.password}</span>{/if}
 			</FormGroup>
 			<Button type="submit">Login</Button>
 		</form>

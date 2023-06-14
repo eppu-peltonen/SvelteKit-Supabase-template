@@ -1,5 +1,12 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
+import { z } from "zod";
+import { superValidate } from "sveltekit-superforms/server";
+
+const schema = z.object({
+	fullName: z.string(),
+	username: z.string()
+});
 
 export const load = (async ({ locals: { supabase, getSession } }) => {
 	const session = await getSession();
@@ -10,26 +17,30 @@ export const load = (async ({ locals: { supabase, getSession } }) => {
 
 	const { data: profile } = await supabase
 		.from("profiles")
-		.select(`username, full_name`)
+		.select(`username, fullName`)
 		.eq("id", session.user.id)
 		.single();
 
-	return { session, profile };
+	const form = await superValidate(profile, schema);
+
+	return { session, profile, form };
 }) satisfies PageServerLoad;
 
 export const actions = {
 	update: async ({ request, locals: { supabase, getSession } }) => {
-		const formData = await request.formData();
-		const fullName = formData.get("fullName") as string;
-		const username = formData.get("username") as string;
+		const form = await superValidate(request, schema);
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
 
 		const session = await getSession();
 
 		const { error } = await supabase
 			.from("profiles")
 			.update({
-				full_name: fullName,
-				username: username
+				fullName: form.data.fullName,
+				username: form.data.username
 			})
 			.eq("id", session?.user.id);
 
@@ -40,10 +51,7 @@ export const actions = {
 			});
 		}
 
-		return {
-			fullName,
-			username
-		};
+		return { form };
 	},
 	signout: async ({ locals: { supabase, getSession } }) => {
 		const session = await getSession();

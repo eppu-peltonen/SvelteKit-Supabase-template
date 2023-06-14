@@ -3,17 +3,18 @@
 	import { Loading, TextInput, Button, FormGroup } from "carbon-components-svelte";
 	import type { SubmitFunction } from "@sveltejs/kit";
 	import { messagesStore } from "svelte-legos";
+	import { superForm } from "sveltekit-superforms/client";
+	import type { PageData } from "./$types";
+	import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";
 
-	export let data;
-	export let form;
+	export let data: PageData;
 
-	let { session, profile } = data;
+	const { form } = superForm(data.form);
+
+	let { session } = data;
 
 	let loading = false;
 	const successMessage = "Updated!";
-
-	let fullName: string = profile?.full_name ?? "";
-	let username: string = profile?.username ?? "";
 
 	const handleSubmit: SubmitFunction = ({ cancel }) => {
 		loading = true;
@@ -73,7 +74,7 @@
 					id="fullName"
 					name="fullName"
 					type="text"
-					value={form?.fullName ?? fullName}
+					bind:value={$form.fullName}
 				/>
 				<label class="bx--label" for="username">Username</label>
 				<input
@@ -81,7 +82,7 @@
 					id="username"
 					name="username"
 					type="text"
-					value={form?.username ?? username}
+					bind:value={$form.username}
 				/>
 			</FormGroup>
 			<Button type="submit">Update</Button>

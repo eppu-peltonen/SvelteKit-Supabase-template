@@ -1,34 +1,59 @@
-import type { Actions } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
 import bcrypt from "bcrypt";
 import { fail } from "@sveltejs/kit";
+import { z } from "zod";
+import { superValidate, setError } from "sveltekit-superforms/server";
+
+const schema = z.object({
+	email: z.string().email().nonempty(),
+	username: z.string().nonempty(),
+	password: z.string().nonempty()
+});
 
 const saltRounds = 10;
 
+export const load: PageServerLoad = async () => {
+	const form = await superValidate(schema);
+	return { form };
+};
+
 export const actions = {
 	signup: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const email = formData.get("email") as string;
-		const username = formData.get("username") as string;
-		const password = formData.get("password") as string;
-		const passwordHash = await hashPassword(password);
+		const form = await superValidate(request, schema);
+
+		if (!form.valid) {
+			return fail(400, { form });
+		}
+
+		const { data: profile } = await supabase
+			.from("profiles")
+			.select("*")
+			.eq("username", form.data.username)
+			.single();
+
+		if (profile) {
+			return fail(400, { message: "Username already exists", form });
+		}
+
+		const passwordHash = await hashPassword(form.data.password);
 
 		const { error } = await supabase.auth.signUp({
-			email: email,
+			email: form.data.email,
 			password: passwordHash,
 			options: {
 				data: {
-					username: username,
+					username: form.data.username,
 					password: passwordHash,
-					email: email
+					email: form.data.username
 				}
 			}
 		});
 
 		if (error) {
-			return fail(500);
+			return fail(400, { form });
 		}
 
-		return { success: true };
+		return { form };
 	}
 } satisfies Actions;
 
