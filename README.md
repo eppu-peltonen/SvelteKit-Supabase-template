@@ -2,17 +2,15 @@
 
 This project is a template for building web apps quickly. Setup Supabase project and start building with SvelteKit.
 
-## Setup Instructions
+## Supabase
 
-### Supabase
-
-#### Setup Project
+### Setup Project
 
 Go to [supabase.com](https://supabase.com/) and create a new project.
 
 Below is set of instructions to create the database schema, policies, functions etc. Feel free to edit the scripts how you like.
 
-#### Create profiles table
+### Create profiles table
 
 Go to SQL Editor -> New query and copy paste the script below to create the profiles table.
 
@@ -32,7 +30,7 @@ create table
   ) tablespace pg_default;
 ```
 
-#### Setup Row Level Security
+### Setup Row Level Security
 
 In the SQL Editor query window, paste script below to add policies:
 
@@ -50,7 +48,7 @@ create policy "Users can update own profile." on profiles
   for update using (auth.uid() = id);
 ```
 
-#### Database function and trigger for sign up
+### Database function and trigger for sign up
 
 This will automatically create a profile when a new user signs up.
 
@@ -68,17 +66,17 @@ create trigger on_auth_user_created
   for each row execute procedure public.handle_new_user();
 ```
 
-#### Authentication settings
+### Authentication settings
 
 1. Go to Authentication -> URL Configuration.
 2. Change Site URL to `http://localhost:5173`
 3. Optionally go to Email Templates and customize the `Confirm signup` template. This email will be sent to users when they sign up.
 
-#### API keys
+### API keys
 
 Go to Project settings -> API and find the project URL and anon key for SvelteKit.
 
-### SvelteKit
+## SvelteKit
 
 1. Fork the project and install dependencies with `npm install` or whatever package manager you use.
 2. Create `.env` file in the root directory and paste the Supabase project URL and anon key with following format:
@@ -92,6 +90,6 @@ Go to Project settings -> API and find the project URL and anon key for SvelteKi
 
 ## Building and testing
 
-`npm run build` to create a production version of the app.
-`npm run format` to run prettier format with configured settings in `.prettierrc`.
-`npm run test` to run playwright tests.
+- `npm run build` to create a production version of the app.
+- `npm run format` to run prettier format with configured settings in `.prettierrc`.
+- `npm run test` to run playwright tests.
