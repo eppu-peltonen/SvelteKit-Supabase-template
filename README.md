@@ -8,7 +8,7 @@ This project is a template for building web apps quickly. Setup Supabase project
 
 Go to [supabase.com](https://supabase.com/) and create a new project.
 
-Below is set of instructions to create the database schema, policies, functions etc. Feel free to edit the scripts how you like.
+Below is set of instructions to create the database schema, policies, functions etc. You can customize the username length constraint to your preference.
 
 ### Create profiles table
 
