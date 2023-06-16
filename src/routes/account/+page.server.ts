@@ -45,7 +45,6 @@ export const actions = {
 			.eq("id", session?.user.id);
 
 		if (error) {
-			console.log(error);
 			return fail(500, {
 				message: "Failed to update."
 			});
