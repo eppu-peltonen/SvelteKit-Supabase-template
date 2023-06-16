@@ -44,7 +44,7 @@ export const actions = {
 				data: {
 					username: form.data.username,
 					password: passwordHash,
-					email: form.data.username
+					email: form.data.email
 				}
 			}
 		});
