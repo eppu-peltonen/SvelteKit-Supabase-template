@@ -19,8 +19,6 @@ export const actions = {
 	login: async ({ request, locals: { supabase } }) => {
 		const form = await superValidate(request, schema);
 
-		console.log(typeof form.data.username);
-
 		if (!form.valid) {
 			return fail(400, { form });
 		}

@@ -4,7 +4,7 @@
 	import { enhance } from "$app/forms";
 	import type { SubmitFunction } from "@sveltejs/kit";
 
-	import "carbon-components-svelte/css/g90.css";
+	import "carbon-components-svelte/css/all.css";
 
 	import {
 		Header,
@@ -20,8 +20,7 @@
 		SideNavLink,
 		Content,
 		Grid,
-		Row,
-		Column,
+		Theme,
 		Button,
 		Loading
 	} from "carbon-components-svelte";
@@ -87,6 +86,20 @@
 	<svelte:fragment slot="skip-to-content">
 		<SkipToContent />
 	</svelte:fragment>
+
+	<Theme
+		theme="g80"
+		render="toggle"
+		toggle={{
+			themes: ["white", "g80"],
+			labelA: "Dark mode",
+			labelB: "Dark mode",
+			size: "sm",
+			hideLabel: true
+		}}
+		persist
+	/>
+
 	<HeaderUtilities>
 		<HeaderAction
 			bind:isOpen={isLoginOpen}
